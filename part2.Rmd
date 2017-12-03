@@ -1,0 +1,104 @@
+---
+title: "ToothGrowth Analysis"
+author: "HPSUN"
+date: "2017年12月3日"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Overview
+This dataset is "The Effect of Vitamin C on Tooth Growth in Guinea Pigs"
+It has three variable 
+[,1]	len	numeric	Tooth length
+[,2]	supp	factor	Supplement type (VC or OJ).
+[,3]	dose	numeric	Dose in milligrams/day
+details can be found here:
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html
+
+## Data Summary
+```{r}
+library(ggplot2)
+g <- ggplot(ToothGrowth,aes(dose,len))
+g + geom_jitter(aes(color=supp)) + labs(title="Summary of ToothGrowth data")
+```
+
+## Growth Effect Comparision
+### Same dose, different supplyment
+#### 0.5mg
+```{r}
+OJ <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==0.5)]
+VC <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==0.5)]
+h <- t.test(x=OJ,y=VC,alternative = "two.sided")
+c(mean(OJ),mean(VC))
+paste("confidence interval:",round(h$conf.int[1],3),"-",round(h$conf.int[2],3))
+paste("Pvalue:",round(h$p.value,5))
+```
+#### 1.0 mg
+```{r}
+OJ <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==1)]
+VC <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==1)]
+h <- t.test(x=OJ,y=VC,alternative = "two.sided")
+c(mean(OJ),mean(VC))
+paste("confidence interval:",round(h$conf.int[1],3),"-",round(h$conf.int[2],3))
+paste("Pvalue:",round(h$p.value,5))
+```
+#### 2.0 mg
+```{r}
+OJ <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==2)]
+VC <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==2)]
+h <- t.test(x=OJ,y=VC,alternative = "two.sided")
+c(mean(OJ),mean(VC))
+paste("confidence interval:",round(h$conf.int[1],3),"-",round(h$conf.int[2],3))
+paste("Pvalue:",round(h$p.value,5))
+```
+### Same supplyment,different dose
+#### OJ
+```{r}
+OJ.5 <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==0.5)]
+OJ1 <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==1)]
+OJ2 <- ToothGrowth$len[which(ToothGrowth$supp=="OJ"&ToothGrowth$dose==2)]
+c(mean(OJ.5),mean(OJ1),mean(OJ2))
+```
+```{r}
+h <- t.test(x=OJ.5,y=OJ1,alternative = "less")
+paste("Pvalue of length under dose 0.5 less than dose 1.0 mg is:",round(h$p.value,5))
+h <- t.test(x=OJ.5,y=OJ2,alternative = "less")
+paste("Pvalue of length under dose 0.5 less than dose 2.0 mg is:",round(h$p.value,5))
+h <- t.test(x=OJ1,y=OJ2,alternative = "less")
+paste("Pvalue of length under dose 1.0 less than dose 2.0 mg is:",round(h$p.value,5))
+```
+#### VC
+```{r}
+VC.5 <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==0.5)]
+VC1 <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==1)]
+VC2 <- ToothGrowth$len[which(ToothGrowth$supp=="VC"&ToothGrowth$dose==2)]
+c(mean(VC.5),mean(VC1),mean(VC2))
+```
+```{r}
+h <- t.test(x=VC.5,y=VC1,alternative = "less")
+paste("Pvalue of length under dose 0.5 less than dose 1.0 mg is:",round(h$p.value,5))
+h <- t.test(x=VC.5,y=VC2,alternative = "less")
+paste("Pvalue of length under dose 0.5 less than dose 2.0 mg is:",round(h$p.value,5))
+h <- t.test(x=VC1,y=VC2,alternative = "less")
+paste("Pvalue of length under dose 1.0 less than dose 2.0 mg is:",round(h$p.value,5))
+```
+## Conclusions
+From results above, we can tell that length of tooth is significantly related with the dose of supplyments (both OJ and VC). The higher dose of supplyments, the longer tooth length. 
+And the effect of supplyments are different. At low dose (0.5 and 1.0 mg),the OJ supply has a better effect of tooth length at 95% confidence, but this differnce no longer significant at 2.0 mg dose.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
